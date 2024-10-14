@@ -1,6 +1,6 @@
 // src/api/consumer.js
 
-async function consumer(texto) {
+async function consumer(texto, token) {
     const url = 'http://localhost:5000/class'; 
 
     try {
@@ -8,6 +8,7 @@ async function consumer(texto) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Añadir el Bearer token aquí
             },
             body: JSON.stringify({ texto }), 
         });

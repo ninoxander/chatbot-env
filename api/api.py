@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from TextClassifier import TextClassifier
@@ -12,18 +13,21 @@ app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
 
 
-classifier = TextClassifier('./modelo_1000_epoch')
+classifier = TextClassifier('./modelo_muse_epoch')
 
 @app.route('/login', methods=['POST'])
 def login():
     username = request.json.get('username')
     password = request.json.get('password')
 
-    if username == os.getenv('USERNAME') and password == os.getenv('PASSWORD'):
-        access_token = create_access_token(identity=username)
+    if username == "0000" and password == "0000":
+        # Establecer la duración del token en 30 días
+        expires = timedelta(days=30)
+        access_token = create_access_token(identity=username, expires_delta=expires)
         return jsonify(access_token=access_token), 200
     else:
         return jsonify({"msg": "Usuario o contraseña incorrectos"}), 401
+    
     
 @app.route('/class', methods=['POST'])
 @jwt_required()
